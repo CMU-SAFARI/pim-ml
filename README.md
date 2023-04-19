@@ -1,7 +1,11 @@
 # pim-ml
 PIM-ML is a benchmark for training machine learning algorithms on [UPMEM](https://www.upmem.com/) architecture, which is a real-world- processing-in-memory architecture. The UPMEM architecture integrate tranditional DRAM memory and general-purpose in-order cores, called DRAM Processing Units (DPUs), in the same chip. 
 
-PIM-ML includes four machine learning algorithms: Linear Regression, Logistic Regression, K-means, and Decision Trees.
+PIM-ML includes four machine learning algorithms: 
+- Linear Regression 
+- Logistic Regression 
+- K-means 
+- Decision Trees 
 
 ## Citation
 Juan Gómez-Luna, Yuxin Guo, Sylvan Brocard, Julien Legriel, Remy Cimadomo, Geraldo F. Oliveira, Gagandeep Singh, Onur Mutlu, "[An Experimental Evaluation of Machine Learning Training on a Real Processing-in-Memory System](https://arxiv.org/abs/2207.07886)", arXiv:2207.07886 [cs.AR], 2022. 
@@ -65,7 +69,8 @@ By default, Linear Regression and Logistic Regression benchmarks use synthetic d
 TODO
 
 ### Getting Help 
-If you have any suggestions for improvement, please contact xxx. 
+If you have any suggestions for improvement, please contact yuxin.guo.007 at gmail dot com. 
 If you find any bugs or have further questions or requests, please post an issue at the [issue page](https://github.com/CMU-SAFARI/pim-ml/issues).
 
 ## Acknowledgments 
+TODO
