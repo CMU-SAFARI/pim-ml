@@ -1,5 +1,5 @@
 # pim-ml
-PIM-ML is a benchmark for training machine learning algorithms on [UPMEM](https://www.upmem.com/) architecture, which is a real-world- processing-in-memory architecture. The UPMEM architecture integrate tranditional DRAM memory and general-purpose in-order cores, called DRAM Processing Units (DPUs), in the same chip. 
+PIM-ML is a benchmark for training machine learning algorithms on [UPMEM](https://www.upmem.com/) architecture, which is a real-world processing-in-memory architecture. The UPMEM architecture integrate tranditional DRAM memory and general-purpose in-order cores, called DRAM Processing Units (DPUs), in the same chip. 
 
 PIM-ML includes four machine learning algorithms: 
 - Linear Regression 
@@ -63,7 +63,7 @@ NR_DPUS=32 NR_TASKLETS=16 make all
 ./bin/host_code -i 100 -l 0.001 -m 1024 -n 16
 ```
 
-By default, Linear Regression and Logistic Regression benchmarks use synthetic dataset. To use real dataset, the BENCHMARK_FOLDER/host/app.c file should be editted to read the real dataset from a specific file. 
+By default, Linear Regression and Logistic Regression benchmarks use synthetic dataset. To use real dataset, the ```BENCHMARK_FOLDER/host/app.c``` should be editted to read the real dataset from a specific file. 
 
 ### K-means and Decision Trees 
 TODO
