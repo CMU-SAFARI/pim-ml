@@ -1,0 +1,452 @@
+
+bin/dpu_code:	file format elf32-dpu
+
+
+Disassembly of section .text:
+
+80000000 <__bootstrap>:
+80000000: 06 00 00 83 73 3c 00 00      	jnz id, __sys_start_thread
+80000008: 00 00 00 46 e3 7c 00 00      	sd zero, 16, 0
+80000010: 00 00 ac 00 e3 6b 00 00      	move r23, 202
+
+80000018 <__sys_atomic_bit_clear>:
+80000018: 06 00 8c 82 5f 3c 00 00      	jeq r23, 200, __sys_start_thread
+80000020: 05 00 00 80 5f 7c 00 00      	release r23, 0, nz, 0x80000028
+80000028: 03 00 ff 01 df 2f 00 00      	add r23, r23, -1, true, __sys_atomic_bit_clear
+
+80000030 <__sys_start_thread>:
+80000030: 08 00 f0 82 73 3c 00 00      	jeq id, 15, 0x80000040
+80000038: 00 00 10 20 f3 7d 00 00      	boot id, 1
+80000040: 00 20 81 46 7f 7b 00 00      	ld d22, id8, 1048
+80000048: 00 00 b0 00 e3 8b 00 00      	call r23, main
+
+80000050 <__sys_end>:
+80000050: 0a 00 00 21 f3 7e 00 00      	stop true, __sys_end
+
+80000058 <main>:
+; int main() {
+80000058: 00 00 0d 46 da 7e 00 00      	sd r22, 80, d22
+80000060: 00 00 85 00 5b 0b 00 00      	add r22, r22, 88
+80000068: ff ff 0d 47 59 7e 00 00      	sd r22, -64, d14
+80000070: ff ff 81 47 da 7d 00 00      	sd r22, -72, d16
+80000078: ff ff 05 47 da 7d 00 00      	sd r22, -80, d18
+80000080: ff ff 89 47 5a 7d 00 00      	sd r22, -88, d20
+;     return __builtin_dpu_tid();
+80000088: 13 00 00 b3 f3 87 00 00      	move r15, id, nz, 0x80000098
+;         mem_reset(); // Reset the heap
+80000090: 00 00 0f 00 e3 8b 00 00      	call r23, mem_reset
+;     barrier_wait(&my_barrier);
+80000098: 00 20 8d 00 63 60 00 00      	move r0, 1240
+800000a0: 00 00 5f 00 e3 8b 00 00      	call r23, barrier_wait
+;     uint32_t n_size = DPU_INPUT_ARGUMENTS.n_size;
+800000a8: 00 20 8f 44 63 77 00 00      	lw r14, zero, 1272
+800000b0: 00 20 8f 00 63 60 00 00      	move r0, 1272
+;     uint32_t n_size_pad = DPU_INPUT_ARGUMENTS.n_size_pad;
+800000b8: 00 00 40 44 03 7a 00 00      	lw r20, r0, 4
+;     uint32_t nr_rows = DPU_INPUT_ARGUMENTS.nr_rows;
+800000c0: 00 00 80 44 83 70 00 00      	lw r1, r0, 8
+800000c8: ff ff 02 45 d8 7e 00 00      	sw r22, -48, r1
+;     uint32_t max_rows = DPU_INPUT_ARGUMENTS.max_rows;
+800000d0: 00 00 c0 44 03 79 00 00      	lw r18, r0, 12
+;     uint32_t rows_per_tasklet = DPU_INPUT_ARGUMENTS.rows_per_tasklet[tasklet_id]; 
+800000d8: 00 00 20 40 3c 80 00 00      	lsl_add r0, r0, r15, 2
+800000e0: 00 00 05 44 83 70 00 00      	lw r1, r0, 80
+800000e8: ff ff 82 45 58 7e 00 00      	sw r22, -56, r1
+;     uint32_t start_row = DPU_INPUT_ARGUMENTS.start_row[tasklet_id];
+800000f0: 00 00 01 44 03 70 00 00      	lw r0, r0, 16
+800000f8: ff ff c0 45 58 7e 00 00      	sw r22, -52, r0
+;     uint32_t tasklet_offset = tasklet_id * n_size_pad; 
+80000100: 00 00 00 b0 53 80 00 00      	move r0, r20
+80000108: ff ff 8e 45 59 7f 00 00      	sw r22, -24, r15
+80000110: 00 00 00 b0 bf 80 00 00      	move r1, r15
+80000118: 00 80 d3 00 e3 8b 00 00      	call r23, __mulsi3
+80000120: 00 00 00 b0 83 87 00 00      	move r15, r0
+;     for (uint32_t each_attribute = 0; each_attribute < n_size_pad; each_attribute++) {
+80000128: 2b 00 00 82 53 3c 00 00      	jz r20, 0x80000158
+80000130: 00 00 81 00 63 60 00 00      	move r0, 24
+80000138: 00 00 20 40 3c 80 00 00      	lsl_add r0, r0, r15, 2
+80000140: 00 00 24 40 53 81 00 00      	lsl r2, r20, 2
+80000148: 00 00 00 00 e3 60 00 00      	move r1, 0
+;         gradient_tmp[tasklet_offset + each_attribute] = 0; 
+80000150: 00 00 cb 00 e3 8b 00 00      	call r23, memset
+80000158: ff ff ce 45 59 7f 00 00      	sw r22, -20, r15
+;     uint32_t mram_base_addr_X = (uint32_t) (DPU_MRAM_HEAP_POINTER + start_row * n_size_byte);
+80000160: ff ff cc 44 5b 70 00 00      	lw r0, r22, -52
+80000168: 00 00 00 b0 bb 80 00 00      	move r1, r14
+80000170: 00 80 d3 00 e3 8b 00 00      	call r23, __mulsi3
+80000178: 00 00 00 b0 83 87 00 00      	move r15, r0
+80000180: 00 00 04 00 e3 68 00 00      	move r17, 64
+;     uint32_t mram_base_addr_Y = (uint32_t) (DPU_MRAM_HEAP_POINTER + max_rows * n_size_pad_byte + (start_row << 1)); 
+80000188: 00 00 00 b0 4b 80 00 00      	move r0, r18
+80000190: 00 00 00 b0 d3 80 00 00      	move r1, r20
+80000198: 00 80 d3 00 e3 8b 00 00      	call r23, __mulsi3
+800001a0: 00 00 c0 00 c4 2d 00 00      	add r19, r17, r0
+;     uint32_t mram_base_addr_W = (uint32_t) (DPU_MRAM_HEAP_POINTER + max_rows * n_size_pad_byte + (max_rows << 1)); 
+800001a8: 00 00 16 40 4a 88 00 00      	lsl_add r16, r19, r18, 1
+800001b0: 00 20 00 00 e3 6a 00 00      	move r21, 1024
+;     T *cache_X = (T *) mem_alloc(BLOCK_SIZE); 
+800001b8: 00 00 00 b0 57 80 00 00      	move r0, r21
+800001c0: 00 00 9e 00 e3 8b 00 00      	call r23, mem_alloc
+800001c8: ff ff c0 45 d8 7e 00 00      	sw r22, -36, r0
+;     int16_t *cache_Y = (int16_t *) mem_alloc(BLOCK_SIZE); 
+800001d0: 00 00 00 b0 57 80 00 00      	move r0, r21
+800001d8: 00 00 9e 00 e3 8b 00 00      	call r23, mem_alloc
+800001e0: ff ff 80 45 d8 7e 00 00      	sw r22, -40, r0
+800001e8: ff ff 08 45 da 7f 00 00      	sw r22, -16, r20
+;     int16_t *cache_W = (int16_t *) mem_alloc(n_size_pad << 1); // fixed-point arithmetic 
+800001f0: 00 00 14 40 53 89 00 00      	lsl r18, r20, 1
+800001f8: 00 00 00 b0 4b 80 00 00      	move r0, r18
+80000200: 00 00 9e 00 e3 8b 00 00      	call r23, mem_alloc
+80000208: 00 00 00 b0 03 8a 00 00      	move r20, r0
+80000210: ff ff ff ff 63 60 00 00      	move r0, -1
+;     __builtin_dpu_ldma(to, from, nb_of_bytes);
+80000218: 00 00 30 20 48 80 00 00      	lsr_add r0, r0, r18, 3
+80000220: 00 00 88 50 02 80 00 00      	lsl_add r0, r20, r0, 24
+80000228: 00 00 00 00 02 70 00 00      	ldma r0, r16, 0
+;     uint32_t rows_per_cache = BLOCK_SIZE / n_size_byte; 
+80000230: 00 00 00 b0 57 80 00 00      	move r0, r21
+80000238: 00 00 00 b0 bb 80 00 00      	move r1, r14
+80000240: 00 80 41 00 e3 8b 00 00      	call r23, __udiv32
+80000248: ff ff 40 45 d8 7e 00 00      	sw r22, -44, r0
+;     for (unsigned int row_index = 0; row_index < rows_per_tasklet;) {
+80000250: ff ff 8c 44 5b 70 00 00      	lw r0, r22, -56
+80000258: 97 00 00 82 03 3c 00 00      	jz r0, 0x800004b8
+80000260: 00 00 ce 00 45 0c 00 00      	add r0, r17, r15
+80000268: ff ff 00 45 58 7f 00 00      	sw r22, -32, r0
+80000270: ff ff cc 44 5b 70 00 00      	lw r0, r22, -52
+80000278: 00 00 16 40 02 80 00 00      	lsl_add r0, r19, r0, 1
+80000280: ff ff 40 45 58 7f 00 00      	sw r22, -28, r0
+;     for (unsigned int row_index = 0; row_index < rows_per_tasklet;) {
+80000288: 00 00 81 00 63 60 00 00      	move r0, 24
+80000290: ff ff ce 44 db 70 00 00      	lw r1, r22, -20
+80000298: 00 00 20 40 04 89 00 00      	lsl_add r18, r0, r1, 2
+800002a0: 57 00 00 b1 63 88 00 00      	move r16, zero, true, 0x800002b8
+800002a8: ff ff 8c 44 5b 70 00 00      	lw r0, r22, -56
+800002b0: 97 00 c0 95 40 3c 00 00      	jgeu r16, r0, 0x800004b8
+;         mram_temp_addr_X = mram_base_addr_X + row_index * n_size_byte; 
+800002b8: 00 00 00 b0 43 80 00 00      	move r0, r16
+800002c0: 00 00 00 b0 bb 80 00 00      	move r1, r14
+800002c8: 00 80 d3 00 e3 8b 00 00      	call r23, __mulsi3
+800002d0: ff ff 0e 44 db 70 00 00      	lw r1, r22, -32
+800002d8: 00 00 c2 00 00 0c 00 00      	add r0, r0, r1
+;         mram_temp_addr_Y = mram_base_addr_Y + (row_index << 1); 
+800002e0: ff ff 4e 44 db 70 00 00      	lw r1, r22, -28
+800002e8: 00 00 12 40 c0 80 00 00      	lsl_add r1, r1, r16, 1
+;     __builtin_dpu_ldma(to, from, nb_of_bytes);
+800002f0: ff ff cd 44 5b 71 00 00      	lw r2, r22, -36
+800002f8: 00 00 00 7f 08 70 00 00      	ldma r2, r0, 127
+80000300: ff ff 8d 44 5b 70 00 00      	lw r0, r22, -40
+80000308: 00 00 02 7f 00 70 00 00      	ldma r0, r1, 127
+;         for(unsigned int y_index = 0; (y_index<rows_per_cache) && (row_index<rows_per_tasklet); y_index++, row_index++){
+80000310: ff ff 8c 44 5b 70 00 00      	lw r0, r22, -56
+80000318: 55 00 c0 95 40 3c 00 00      	jgeu r16, r0, 0x800002a8
+80000320: 00 20 00 00 63 60 00 00      	move r0, 1024
+80000328: 55 00 c0 9b 38 3c 00 00      	jgtu r14, r0, 0x800002a8
+80000330: 00 00 00 00 e3 68 00 00      	move r17, 0
+80000338: ff ff cd 44 db 79 00 00      	lw r19, r22, -36
+;             if(row_index+start_row >= nr_rows){
+80000340: ff ff cc 44 5b 70 00 00      	lw r0, r22, -52
+80000348: 00 00 c0 00 40 0c 00 00      	add r0, r16, r0
+80000350: ff ff 0d 44 db 70 00 00      	lw r1, r22, -48
+80000358: 97 00 c2 95 00 3c 00 00      	jgeu r0, r1, 0x800004b8
+;     for (unsigned int i = 0; i < length; i++) {
+80000360: 8f 00 00 82 3b 3c 00 00      	jz r14, 0x80000478
+80000368: 00 00 00 00 e3 60 00 00      	move r1, 0
+80000370: 72 00 00 b1 07 80 00 00      	move r0, r1, true, 0x80000390
+;     for (unsigned int i = 0; i < length; i++) {
+80000378: 00 00 10 00 87 00 00 00      	add r1, r1, 1
+;         result += bufferX[i] * bufferW[i]; 
+80000380: 00 00 c0 00 08 0c 00 00      	add r0, r2, r0
+;     for (unsigned int i = 0; i < length; i++) {
+80000388: 7d 00 c2 82 38 3c 00 00      	jeq r14, r1, 0x800003e8
+;         result += bufferX[i] * bufferW[i]; 
+80000390: 00 00 c2 00 4c 0d 00 00      	add r2, r19, r1
+80000398: 00 00 00 41 8b 71 00 00      	lbs r3, r2, 0
+800003a0: 00 00 18 40 06 81 00 00      	lsl_add r2, r20, r1, 1
+800003a8: 00 00 00 43 0b 72 00 00      	lhs r4, r2, 0
+800003b0: 6f 00 06 1e 10 0d 00 00      	mul_ul_ul r2, r4, r3, small, 0x80000378
+800003b8: 00 00 a6 00 90 0e 00 00      	mul_sh_ul r5, r4, r3
+800003c0: 00 00 84 40 14 81 00 00      	lsl_add r2, r2, r5, 8
+800003c8: 00 00 a8 00 8c 0e 00 00      	mul_sh_ul r5, r3, r4
+800003d0: 00 00 84 40 14 81 00 00      	lsl_add r2, r2, r5, 8
+800003d8: 00 00 76 00 90 0d 00 00      	mul_sh_sh r3, r4, r3
+800003e0: 6f 00 04 51 0c 81 00 00      	lsl_add r2, r2, r3, 16, true, 0x80000378
+;             for (unsigned int l = 0; l < n_size; ++l) { 
+800003e8: 8f 00 00 82 3b 3c 00 00      	jz r14, 0x80000478
+800003f0: ff ff 8d 44 db 70 00 00      	lw r1, r22, -40
+800003f8: 00 00 12 40 c4 80 00 00      	lsl_add r1, r1, r17, 1
+80000400: 00 00 00 43 87 70 00 00      	lhs r1, r1, 0
+80000408: 00 00 a4 40 87 80 00 00      	lsl r1, r1, 10
+80000410: 00 00 c0 80 84 1f 00 00      	sub r15, r1, r0
+80000418: 00 00 00 00 e3 6a 00 00      	move r21, 0
+;                 gradient_tmp[tasklet_offset + l] -= cache_X[x_index + l] * ((cache_Y[y_index] \
+80000420: 00 00 ca 00 4e 0c 00 00      	add r0, r19, r21
+80000428: 00 00 00 41 83 70 00 00      	lbs r1, r0, 0
+80000430: 00 00 00 b0 3f 80 00 00      	move r0, r15
+80000438: 00 80 d3 00 e3 8b 00 00      	call r23, __mulsi3
+80000440: 00 00 24 40 d6 80 00 00      	lsl_add r1, r18, r21, 2
+80000448: 00 00 00 44 07 71 00 00      	lw r2, r1, 0
+;                     << SHIFT_AMOUNT) - dot_product_t) >> SHIFT_AMOUNT; 
+80000450: 00 00 a8 40 03 80 00 00      	asr r0, r0, 10
+;                 gradient_tmp[tasklet_offset + l] -= cache_X[x_index + l] * ((cache_Y[y_index] \
+80000458: 00 00 c0 80 08 0c 00 00      	sub r0, r2, r0
+;             for (unsigned int l = 0; l < n_size; ++l) { 
+80000460: 00 00 10 00 d7 0a 00 00      	add r21, r21, 1
+;                 gradient_tmp[tasklet_offset + l] -= cache_X[x_index + l] * ((cache_Y[y_index] \
+80000468: 00 00 00 44 04 7c 00 00      	sw r1, 0, r0
+;             for (unsigned int l = 0; l < n_size; ++l) { 
+80000470: 84 00 ca 83 3a 3c 00 00      	jneq r14, r21, 0x80000420
+;         for(unsigned int y_index = 0; (y_index<rows_per_cache) && (row_index<rows_per_tasklet); y_index++, row_index++){
+80000478: 00 00 10 00 43 08 00 00      	add r16, r16, 1
+80000480: ff ff 8c 44 5b 70 00 00      	lw r0, r22, -56
+80000488: 55 00 c0 95 40 3c 00 00      	jgeu r16, r0, 0x800002a8
+80000490: 00 00 10 00 c7 08 00 00      	add r17, r17, 1
+;         for(unsigned int y_index = 0; (y_index<rows_per_cache) && (row_index<rows_per_tasklet); y_index++, row_index++){
+80000498: 00 00 cc 00 cd 2d 00 00      	add r19, r19, r14
+800004a0: ff ff 4d 44 5b 70 00 00      	lw r0, r22, -44
+800004a8: 68 00 c0 94 44 3c 00 00      	jltu r17, r0, 0x80000340
+800004b0: 00 00 55 00 63 8c 00 00      	jump 0x800002a8
+;     barrier_wait(&my_barrier);
+800004b8: 00 20 8d 00 63 60 00 00      	move r0, 1240
+800004c0: 00 00 5f 00 e3 8b 00 00      	call r23, barrier_wait
+;     if (tasklet_id == 0) {
+800004c8: ff ff 8e 44 5b 70 00 00      	lw r0, r22, -24
+800004d0: b5 00 00 83 03 3c 00 00      	jnz r0, 0x800005a8
+;         for (unsigned int each_tasklet = 1; each_tasklet < NR_TASKLETS; each_tasklet++){
+800004d8: 00 00 81 00 63 60 00 00      	move r0, 24
+800004e0: ff ff 0f 44 db 73 00 00      	lw r7, r22, -16
+800004e8: 00 00 20 40 1c 80 00 00      	lsl_add r0, r0, r7, 2
+800004f0: 00 00 24 40 9f 80 00 00      	lsl r1, r7, 2
+800004f8: a3 00 10 b1 63 81 00 00      	move r2, 1, true, 0x80000518
+80000500: 00 00 c2 00 00 0c 00 00      	add r0, r0, r1
+80000508: 00 00 10 00 0b 01 00 00      	add r2, r2, 1
+80000510: ae 00 01 82 0b 3c 00 00      	jeq r2, 16, 0x80000570
+80000518: a0 00 00 82 3b 3c 00 00      	jz r14, 0x80000500
+80000520: 00 00 00 00 e3 61 00 00      	move r3, 0
+;                 gradient_tmp[each_attribute] += gradient_tmp[each_tasklet*n_size_pad + each_attribute]; 
+80000528: 00 00 20 40 0c 82 00 00      	lsl_add r4, r0, r3, 2
+80000530: 00 00 24 40 8f 82 00 00      	lsl r5, r3, 2
+80000538: 00 00 00 44 13 72 00 00      	lw r4, r4, 0
+80000540: 00 00 81 44 17 73 00 00      	lw r6, r5, 24
+80000548: 00 00 c8 00 18 0e 00 00      	add r4, r6, r4
+;             for (unsigned int each_attribute = 0; each_attribute < n_size; each_attribute++) {
+80000550: 00 00 10 00 8f 01 00 00      	add r3, r3, 1
+;                 gradient_tmp[each_attribute] += gradient_tmp[each_tasklet*n_size_pad + each_attribute]; 
+80000558: 00 00 88 44 94 7c 00 00      	sw r5, 24, r4
+;             for (unsigned int each_attribute = 0; each_attribute < n_size; each_attribute++) {
+80000560: a5 00 c6 83 38 3c 00 00      	jneq r14, r3, 0x80000528
+80000568: 00 00 0a 00 63 8c 00 00      	jump 0x80000500
+;         mram_write((const void *) gradient_tmp, (__mram_ptr void *) DPU_RESULTS, (n_size_pad << 2)); 
+80000570: 00 00 24 40 1f 80 00 00      	lsl r0, r7, 2
+80000578: ff ff ff ff e3 60 00 00      	move r1, -1
+;     __builtin_dpu_sdma(from, to, nb_of_bytes);
+80000580: 00 00 32 20 00 80 00 00      	lsr_add r0, r1, r0, 3
+80000588: 00 00 81 00 e3 60 00 00      	move r1, 24
+80000590: 00 00 82 50 00 80 00 00      	lsl_add r0, r1, r0, 24
+80000598: 00 00 00 00 e3 60 00 00      	move r1, 0
+800005a0: 02 00 02 00 00 70 00 00      	sdma r0, r1, 0
+800005a8: 00 00 00 00 63 60 00 00      	move r0, 0
+; }
+800005b0: ff ff 8a 46 5b 7a 00 00      	ld d20, r22, -88
+800005b8: ff ff 0b 46 5b 79 00 00      	ld d18, r22, -80
+800005c0: ff ff 8b 46 5b 78 00 00      	ld d16, r22, -72
+800005c8: ff ff 0c 46 5b 77 00 00      	ld d14, r22, -64
+800005d0: ff ff 8f 46 5b 7b 00 00      	ld d22, r22, -8
+800005d8: 00 00 00 00 5f 8c 00 00      	jump r23
+
+800005e0 <memset>:
+800005e0: cf 00 30 a2 83 81 00 00      	and r3, r0, 3, z, 0x80000678
+800005e8: 00 00 40 00 0f 22 00 00      	sub r4, 4, r3
+800005f0: 00 00 00 b0 8b 81 00 00      	move r3, r2
+800005f8: c1 00 c4 9b 10 3c 00 00      	jgtu r4, r2, 0x80000608
+80000600: 00 00 00 b0 93 81 00 00      	move r3, r4
+80000608: c7 00 00 82 0f 3c 00 00      	jz r3, 0x80000638
+80000610: 00 00 00 b0 03 82 00 00      	move r4, r0
+80000618: 00 00 00 b0 8f 82 00 00      	move r5, r3
+80000620: 00 00 02 40 10 7c 00 00      	sb r4, 0, r1
+80000628: 00 00 10 00 13 02 00 00      	add r4, r4, 1
+80000630: c4 00 ff 03 97 0e 00 00      	add r5, r5, -1, nz, 0x80000620
+80000638: 00 00 c6 80 08 0d 00 00      	sub r2, r2, r3
+80000640: 00 00 c6 00 80 0d 00 00      	add r3, r0, r3
+80000648: d1 00 40 95 0b 3c 00 00      	jgeu r2, 4, 0x80000688
+80000650: ce 00 00 82 0b 3c 00 00      	jz r2, 0x80000670
+80000658: 00 00 02 40 0c 7c 00 00      	sb r3, 0, r1
+80000660: 00 00 10 00 8f 01 00 00      	add r3, r3, 1
+80000668: cb 00 ff 03 0b 0d 00 00      	add r2, r2, -1, nz, 0x80000658
+80000670: 00 00 00 00 5f 8c 00 00      	jump r23
+80000678: 00 00 00 b0 83 81 00 00      	move r3, r0
+80000680: ca 00 40 94 0b 3c 00 00      	jltu r2, 4, 0x80000650
+80000688: ff ff cf ff 0b 52 00 00      	and r4, r2, -4
+80000690: 00 00 ff 00 87 52 00 00      	and r5, r1, 255
+80000698: 00 00 8a 50 04 83 00 00      	lsl_add r6, r5, r1, 24
+800006a0: 00 00 8c 40 14 83 00 00      	lsl_add r6, r6, r5, 8
+800006a8: 00 00 0c 50 94 82 00 00      	lsl_add r5, r6, r5, 16
+800006b0: 00 00 2c 40 0b 83 00 00      	lsr r6, r2, 2
+800006b8: 00 00 00 b0 8f 83 00 00      	move r7, r3
+800006c0: 00 00 0a 44 1c 7c 00 00      	sw r7, 0, r5
+800006c8: 00 00 40 00 9f 03 00 00      	add r7, r7, 4
+800006d0: d8 00 ff 03 1b 0f 00 00      	add r6, r6, -1, nz, 0x800006c0
+800006d8: 00 00 30 00 0b 51 00 00      	and r2, r2, 3
+800006e0: 00 00 c8 00 8c 0d 00 00      	add r3, r3, r4
+800006e8: cb 00 00 83 0b 3c 00 00      	jnz r2, 0x80000658
+800006f0: 00 00 ec 00 63 8c 00 00      	jump 0x80000670
+
+800006f8 <mem_alloc_nolock>:
+800006f8: 00 20 cd 44 e3 70 00 00      	lw r1, zero, 1244
+80000700: e7 00 00 82 03 3c 00 00      	jz r0, 0x80000738
+80000708: 00 00 70 00 87 00 00 00      	add r1, r1, 7
+80000710: ff ff 8f ff 87 50 00 00      	and r1, r1, -8
+80000718: e5 00 c0 15 04 0c 00 00      	add r0, r1, r0, nc, 0x80000728
+80000720: 00 00 10 20 63 7e 00 00      	fault 1
+80000728: ff ff ff 40 03 71 00 00      	lbu r2, r0, -1
+80000730: 00 20 c0 45 e0 7e 00 00      	sw zero, 1244, r0
+80000738: 00 00 00 b0 07 80 00 00      	move r0, r1
+80000740: 00 00 00 00 5f 8c 00 00      	jump r23
+
+80000748 <mem_alloc>:
+80000748: 00 00 0d 46 5a 7c 00 00      	sd r22, 0, d22
+80000750: 00 00 80 00 5b 0b 00 00      	add r22, r22, 8
+80000758: eb 00 9c 83 63 7c 00 00      	acquire zero, 201, nz, 0x80000758
+80000760: 00 00 fd 00 e3 8b 00 00      	call r23, mem_alloc_nolock
+80000768: ee 00 9c 80 63 7c 00 00      	release zero, 201, nz, 0x80000770
+80000770: ff ff 8f 46 5b 7b 00 00      	ld d22, r22, -8
+80000778: 00 00 00 00 5f 8c 00 00      	jump r23
+
+80000780 <mem_reset>:
+80000780: f0 00 9c 83 63 7c 00 00      	acquire zero, 201, nz, mem_reset
+80000788: 04 60 81 00 63 60 00 00      	move r0, 17944
+80000790: 00 20 c0 45 e0 7e 00 00      	sw zero, 1244, r0
+80000798: f4 00 9c 80 63 7c 00 00      	release zero, 201, nz, 0x800007a0
+800007a0: 00 00 00 00 5f 8c 00 00      	jump r23
+
+800007a8 <barrier_wait>:
+800007a8: 00 00 30 41 83 70 00 00      	lbs r1, r0, 3
+800007b0: f6 00 00 83 07 7c 00 00      	acquire r1, 0, nz, 0x800007b0
+800007b8: 00 00 10 40 83 71 00 00      	lbu r3, r0, 1
+800007c0: 00 00 00 40 03 71 00 00      	lbu r2, r0, 0
+800007c8: 05 01 10 82 0f 3c 00 00      	jeq r3, 1, 0x80000828
+800007d0: 00 00 00 b0 73 82 00 00      	move r4, id
+800007d8: 12 01 ff 82 0b 3c 00 00      	jeq r2, 255, 0x80000890
+800007e0: 00 20 0e 41 8b 72 00 00      	lbs r5, r2, 1248
+800007e8: 00 20 0a 41 10 7f 00 00      	sb r4, 1248, r5
+800007f0: 00 20 08 41 08 7f 00 00      	sb r2, 1248, r4
+800007f8: 00 00 08 40 00 7c 00 00      	sb r0, 0, r4
+80000800: ff ff ff ff 0f 01 00 00      	add r2, r3, -1
+80000808: 00 00 14 40 00 7c 00 00      	sb r0, 1, r2
+80000810: 03 01 00 80 07 7c 00 00      	release r1, 0, nz, 0x80000818
+80000818: 00 00 00 20 f3 7e 00 00      	stop
+80000820: 00 00 00 00 5f 8c 00 00      	jump r23
+80000828: 10 01 ff 82 0b 3c 00 00      	jeq r2, 255, 0x80000880
+80000830: 00 20 0e 40 8b 71 00 00      	lbu r3, r2, 1248
+80000838: 0c 01 c4 82 0c 3c 00 00      	jeq r3, r2, 0x80000860
+80000840: 08 01 00 23 0f 7d 00 00      	resume r3, 0, nz, 0x80000840
+80000848: 00 00 ff 00 8f 51 00 00      	and r3, r3, 255
+80000850: 00 20 0e 40 8f 71 00 00      	lbu r3, r3, 1248
+80000858: 08 01 c4 83 0c 3c 00 00      	jneq r3, r2, 0x80000840
+80000860: 0c 01 00 23 0b 7d 00 00      	resume r2, 0, nz, 0x80000860
+80000868: 0f 00 0f 40 03 7c 00 00      	sb r0, 0, -1
+80000870: 00 00 20 41 03 71 00 00      	lbs r2, r0, 2
+80000878: 00 00 14 40 00 7c 00 00      	sb r0, 1, r2
+80000880: 11 01 00 80 07 7c 00 00      	release r1, 0, nz, 0x80000888
+80000888: 00 00 00 00 5f 8c 00 00      	jump r23
+80000890: 00 20 08 41 10 7f 00 00      	sb r4, 1248, r4
+80000898: 00 00 ff 00 63 8c 00 00      	jump 0x800007f8
+
+800008a0 <__udiv32>:
+800008a0: 3c 01 30 38 87 81 00 00      	clz r3, r1, max, __udiv32_division_by_zero
+800008a8: 00 00 30 30 03 82 00 00      	clz r4, r0
+800008b0: 3b 01 c6 9b 90 0d 00 00      	sub r3, r4, r3, gtu, __udiv32_result_0
+800008b8: 00 00 00 b0 07 82 00 00      	move r4, r1
+800008c0: 00 00 00 b0 03 90 00 00      	move.u d0, r0
+800008c8: 00 80 93 00 0f 8c 00 00      	jump r3, 0x139
+800008d0: 00 00 f1 70 10 80 00 00      	div_step d0, r4, d0, 31
+800008d8: 00 00 e1 70 10 80 00 00      	div_step d0, r4, d0, 30
+800008e0: 00 00 d1 70 10 80 00 00      	div_step d0, r4, d0, 29
+800008e8: 00 00 c1 70 10 80 00 00      	div_step d0, r4, d0, 28
+800008f0: 00 00 b1 70 10 80 00 00      	div_step d0, r4, d0, 27
+800008f8: 00 00 a1 70 10 80 00 00      	div_step d0, r4, d0, 26
+80000900: 00 00 91 70 10 80 00 00      	div_step d0, r4, d0, 25
+80000908: 00 00 81 70 10 80 00 00      	div_step d0, r4, d0, 24
+80000910: 00 00 71 70 10 80 00 00      	div_step d0, r4, d0, 23
+80000918: 00 00 61 70 10 80 00 00      	div_step d0, r4, d0, 22
+80000920: 00 00 51 70 10 80 00 00      	div_step d0, r4, d0, 21
+80000928: 00 00 41 70 10 80 00 00      	div_step d0, r4, d0, 20
+80000930: 00 00 31 70 10 80 00 00      	div_step d0, r4, d0, 19
+80000938: 00 00 21 70 10 80 00 00      	div_step d0, r4, d0, 18
+80000940: 00 00 11 70 10 80 00 00      	div_step d0, r4, d0, 17
+80000948: 00 00 01 70 10 80 00 00      	div_step d0, r4, d0, 16
+80000950: 00 00 f1 60 10 80 00 00      	div_step d0, r4, d0, 15
+80000958: 00 00 e1 60 10 80 00 00      	div_step d0, r4, d0, 14
+80000960: 00 00 d1 60 10 80 00 00      	div_step d0, r4, d0, 13
+80000968: 00 00 c1 60 10 80 00 00      	div_step d0, r4, d0, 12
+80000970: 00 00 b1 60 10 80 00 00      	div_step d0, r4, d0, 11
+80000978: 00 00 a1 60 10 80 00 00      	div_step d0, r4, d0, 10
+80000980: 00 00 91 60 10 80 00 00      	div_step d0, r4, d0, 9
+80000988: 00 00 81 60 10 80 00 00      	div_step d0, r4, d0, 8
+80000990: 00 00 71 60 10 80 00 00      	div_step d0, r4, d0, 7
+80000998: 00 00 61 60 10 80 00 00      	div_step d0, r4, d0, 6
+800009a0: 00 00 51 60 10 80 00 00      	div_step d0, r4, d0, 5
+800009a8: 00 00 41 60 10 80 00 00      	div_step d0, r4, d0, 4
+800009b0: 00 00 31 60 10 80 00 00      	div_step d0, r4, d0, 3
+800009b8: 00 00 21 60 10 80 00 00      	div_step d0, r4, d0, 2
+800009c0: 00 00 11 60 10 80 00 00      	div_step d0, r4, d0, 1
+
+800009c8 <__udiv32_base>:
+800009c8: 00 00 01 60 10 80 00 00      	div_step d0, r4, d0, 0
+
+800009d0 <__udiv32_exit>:
+800009d0: 00 00 00 00 5f 8c 00 00      	jump r23
+
+800009d8 <__udiv32_result_0>:
+800009d8: 3a 01 00 b1 03 90 00 00      	move.u d0, r0, true, __udiv32_exit
+
+800009e0 <__udiv32_division_by_zero>:
+800009e0: 00 00 20 20 63 7e 00 00      	fault 2
+
+800009e8 <__mulsi3>:
+800009e8: 40 01 c0 9b 04 3c 00 00      	jgtu r1, r0, __mulsi3_swap
+800009f0: 00 00 00 b0 03 81 00 00      	move r2, r0
+800009f8: 42 01 00 b1 07 80 00 00      	move r0, r1, true, __mulsi3_start
+
+80000a00 <__mulsi3_swap>:
+80000a00: 00 00 00 b0 07 81 00 00      	move r2, r1
+80000a08: 00 00 00 b0 03 80 00 00      	move r0, r0
+
+80000a10 <__mulsi3_start>:
+80000a10: 00 00 00 b0 e3 80 00 00      	move r1, zero
+80000a18: 63 01 01 42 08 80 00 00      	mul_step d0, r2, d0, 0, z, __mulsi3_exit
+80000a20: 63 01 11 42 08 80 00 00      	mul_step d0, r2, d0, 1, z, __mulsi3_exit
+80000a28: 63 01 21 42 08 80 00 00      	mul_step d0, r2, d0, 2, z, __mulsi3_exit
+80000a30: 63 01 31 42 08 80 00 00      	mul_step d0, r2, d0, 3, z, __mulsi3_exit
+80000a38: 63 01 41 42 08 80 00 00      	mul_step d0, r2, d0, 4, z, __mulsi3_exit
+80000a40: 63 01 51 42 08 80 00 00      	mul_step d0, r2, d0, 5, z, __mulsi3_exit
+80000a48: 63 01 61 42 08 80 00 00      	mul_step d0, r2, d0, 6, z, __mulsi3_exit
+80000a50: 63 01 71 42 08 80 00 00      	mul_step d0, r2, d0, 7, z, __mulsi3_exit
+80000a58: 63 01 81 42 08 80 00 00      	mul_step d0, r2, d0, 8, z, __mulsi3_exit
+80000a60: 63 01 91 42 08 80 00 00      	mul_step d0, r2, d0, 9, z, __mulsi3_exit
+80000a68: 63 01 a1 42 08 80 00 00      	mul_step d0, r2, d0, 10, z, __mulsi3_exit
+80000a70: 63 01 b1 42 08 80 00 00      	mul_step d0, r2, d0, 11, z, __mulsi3_exit
+80000a78: 63 01 c1 42 08 80 00 00      	mul_step d0, r2, d0, 12, z, __mulsi3_exit
+80000a80: 63 01 d1 42 08 80 00 00      	mul_step d0, r2, d0, 13, z, __mulsi3_exit
+80000a88: 63 01 e1 42 08 80 00 00      	mul_step d0, r2, d0, 14, z, __mulsi3_exit
+80000a90: 63 01 f1 42 08 80 00 00      	mul_step d0, r2, d0, 15, z, __mulsi3_exit
+80000a98: 63 01 01 52 08 80 00 00      	mul_step d0, r2, d0, 16, z, __mulsi3_exit
+80000aa0: 63 01 11 52 08 80 00 00      	mul_step d0, r2, d0, 17, z, __mulsi3_exit
+80000aa8: 63 01 21 52 08 80 00 00      	mul_step d0, r2, d0, 18, z, __mulsi3_exit
+80000ab0: 63 01 31 52 08 80 00 00      	mul_step d0, r2, d0, 19, z, __mulsi3_exit
+80000ab8: 63 01 41 52 08 80 00 00      	mul_step d0, r2, d0, 20, z, __mulsi3_exit
+80000ac0: 63 01 51 52 08 80 00 00      	mul_step d0, r2, d0, 21, z, __mulsi3_exit
+80000ac8: 63 01 61 52 08 80 00 00      	mul_step d0, r2, d0, 22, z, __mulsi3_exit
+80000ad0: 63 01 71 52 08 80 00 00      	mul_step d0, r2, d0, 23, z, __mulsi3_exit
+80000ad8: 63 01 81 52 08 80 00 00      	mul_step d0, r2, d0, 24, z, __mulsi3_exit
+80000ae0: 63 01 91 52 08 80 00 00      	mul_step d0, r2, d0, 25, z, __mulsi3_exit
+80000ae8: 63 01 a1 52 08 80 00 00      	mul_step d0, r2, d0, 26, z, __mulsi3_exit
+80000af0: 63 01 b1 52 08 80 00 00      	mul_step d0, r2, d0, 27, z, __mulsi3_exit
+80000af8: 63 01 c1 52 08 80 00 00      	mul_step d0, r2, d0, 28, z, __mulsi3_exit
+80000b00: 63 01 d1 52 08 80 00 00      	mul_step d0, r2, d0, 29, z, __mulsi3_exit
+80000b08: 63 01 e1 52 08 80 00 00      	mul_step d0, r2, d0, 30, z, __mulsi3_exit
+80000b10: 63 01 f1 52 08 80 00 00      	mul_step d0, r2, d0, 31, z, __mulsi3_exit
+
+80000b18 <__mulsi3_exit>:
+80000b18: 00 00 00 b0 07 80 00 00      	move r0, r1
+80000b20: 00 00 00 00 5f 8c 00 00      	jump r23

@@ -23,16 +23,80 @@ cd pim-ml
 
 ## Repository Structure
 ### Linear Regression and Logistic Regression
-All benchmark folders of Linear Regression and Logistic Regression are similar to the one shown in int32 and float version of Linear Regression (LRGD_int32_float). 
+All benchmark folders of Linear Regression and Logistic Regression are similar to the one shown in `/Linear_Regression`. 
 ```
-+-- LRGD_int32_float/
-|   +-- dpu/
-|   +-- host/
-|   +-- support/
-|   +-- Makefile
-|   +-- run_strong.py
-|   +-- run_tasklet.py
-|   +-- run_weak.py
+├── Linear_Regression
+│   ├── Baseline
+│   │   ├── CPU_MKL
+│   │   │   ├── Makefile
+│   │   │   ├── linear_regression_mkl.c
+│   │   │   └── params.h
+│   │   └── GPU_cuBLAS
+│   │       ├── Makefile
+│   │       └── kernel.cu
+│   ├── LinReg_SUSY_quantization
+│   │   ├── LogReg_int32_SUSY
+│   │   │   ├── ...
+│   │   ├── LogReg_int8_SUSY
+│   │   │   ├── ...
+│   │   └── LogReg_int8_builtin_SUSY
+│   │       ├── ...
+│   ├── LinReg_no_quantization
+│   │   ├── LogReg_int32_float
+│   │   │   ├── Makefile
+│   │   │   ├── dpu
+│   │   │   │   └── task.c
+│   │   │   ├── host
+│   │   │   │   └── app.c
+│   │   │   ├── run_strong.py
+│   │   │   ├── run_tasklet.py
+│   │   │   ├── run_weak.py
+│   │   │   └── support
+│   │   │       ├── common.h
+│   │   │       ├── params.h
+│   │   │       └── timer.h
+│   │   ├── LogReg_int8
+│   │   │   ├── ...
+│   │   └── LogReg_int8_builtin
+│   │       ├── ...
+│   └── LinReg_quantization
+│       ├── LogReg_int32_float
+│       │   ├── ...
+│       ├── LogReg_int8
+│       │   ├── ...
+│       └── LogReg_int8_builtin
+│           ├── ...
+├── Logistic_Regression
+│   ├── Baseline
+│   │   ├── ...
+│   ├── LogReg_SUSY_quantization
+│   │   ├── LogReg_int32_SUSY
+│   │   │   ├── ...
+│   │   └── LogReg_int8_SUSY
+│   │       ├── ...
+│   ├── LogReg_no_quantization
+│   │   ├── LogReg_int32LUTMRAM_float
+│   │   │   ├── ...
+│   │   ├── LogReg_int32LUT_float
+│   │   │   ├── ...
+│   │   ├── LogReg_int32_float
+│   │   │   ├── ...
+│   │   ├── LogReg_int8
+│   │   │   ├── ...
+│   │   └── LogReg_int8_builtin
+│   │       ├── ...
+│   └── LogReg_quantization
+│       ├── LogReg_int32LUTMRAM_float
+│       │   ├── ...
+│       ├── LogReg_int32LUT_float
+│       │   ├── ...
+│       ├── LogReg_int32_float
+│       │   ├── ...
+│       ├── LogReg_int8
+│       │   ├── ...
+│       └── LogReg_int8_builtin
+│           ├── ...
+└── README.md
 ```
 
 ### K-means and Decision Trees 
