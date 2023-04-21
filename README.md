@@ -1,14 +1,59 @@
 # pim-ml
-PIM-ML is a benchmark for training machine learning algorithms on [UPMEM](https://www.upmem.com/) architecture, which is a real-world processing-in-memory architecture. The UPMEM architecture integrate tranditional DRAM memory and general-purpose in-order cores, called DRAM Processing Units (DPUs), in the same chip. 
+PIM-ML is a benchmark for training machine learning algorithms on the [UPMEM](https://www.upmem.com/) architecture, which is the first publicly-available real-world processing-in-memory (PIM) architecture. The UPMEM architecture integrates DRAM memory banks and general-purpose in-order cores, called DRAM Processing Units (DPUs), in the same chip. 
 
-PIM-ML includes four machine learning algorithms: 
+PIM-ML is designed to understand the potential of modern general-purpose PIM architectures to accelerate machine learning training. 
+PIM-ML implements several representative classic machine learning algorithms: 
 - Linear Regression 
 - Logistic Regression 
 - K-means 
 - Decision Trees 
 
 ## Citation
-Juan Gómez-Luna, Yuxin Guo, Sylvan Brocard, Julien Legriel, Remy Cimadomo, Geraldo F. Oliveira, Gagandeep Singh, Onur Mutlu, "[An Experimental Evaluation of Machine Learning Training on a Real Processing-in-Memory System](https://arxiv.org/abs/2207.07886)", arXiv:2207.07886 [cs.AR], 2022. 
+Please cite the following papers if you find this repository useful.
+
+ISPASS2023 paper version:
+
+Juan Gómez-Luna, Yuxin Guo, Sylvan Brocard, Julien Legriel, Remy Cimadomo, Geraldo F. Oliveira, Gagandeep Singh, and Onur Mutlu, "[Evaluating Machine Learning Workloads on Memory-Centric Computing Systems](https://ispass.org/ispass2023/)", 2023 IEEE International Symposium on Performance Analysis of Systems and Software (ISPASS), 2023.
+
+Bibtex entry for citation:
+```
+@inproceedings{gomezluna2022ispass,
+  title={{Evaluating Machine Learning Workloads on Memory-Centric Computing Systems}}, 
+  author={Juan Gómez-Luna and Yuxin Guo and Sylvan Brocard and Julien Legriel and Remy Cimadomo and Geraldo F. Oliveira and Gagandeep Singh and Onur Mutlu},
+  year={2023},
+  booktitle = {ISPASS}
+}
+```
+
+ISVLSI2023 paper version:
+
+Juan Gómez-Luna, Yuxin Guo, Sylvan Brocard, Julien Legriel, Remy Cimadomo, Geraldo F. Oliveira, Gagandeep Singh, and Onur Mutlu, "[Machine Learning Training on a Real Processing-in-Memory System](https://doi.org/10.1109/ISVLSI54635.2022.00064)". 2022 IEEE Computer Society Annual Symposium on VLSI (ISVLSI), 2022.
+
+Bibtex entry for citation:
+```
+@inproceedings{gomezluna2022isvlsi,
+      title={{Machine Learning Training on a Real Processing-in-Memory System}}, 
+      author={Juan Gómez-Luna and Yuxin Guo and Sylvan Brocard and Julien Legriel and Remy Cimadomo and Geraldo F. Oliveira and Gagandeep Singh and Onur Mutlu},
+      booktitle=ISVLSI}, 
+      year={2022}
+}
+```
+
+arXiv paper version:
+
+Juan Gómez-Luna, Yuxin Guo, Sylvan Brocard, Julien Legriel, Remy Cimadomo, Geraldo F. Oliveira, Gagandeep Singh, and Onur Mutlu, "[An Experimental Evaluation of Machine Learning Training on a Real Processing-in-Memory System](https://arxiv.org/abs/2207.07886)", arXiv:2207.07886 [cs.AR], 2022. 
+
+Bibtex entries for citation:
+```
+@misc{gomezluna2023experimental,
+      title={{An Experimental Evaluation of Machine Learning Training on a Real Processing-in-Memory System}}, 
+      author={Juan Gómez-Luna and Yuxin Guo and Sylvan Brocard and Julien Legriel and Remy Cimadomo and Geraldo F. Oliveira and Gagandeep Singh and Onur Mutlu},
+      year={2023},
+      eprint={2207.07886},
+      archivePrefix={arXiv},
+      primaryClass={cs.AR}
+}
+```
 
 ## Installation
 ### Prerequisites
@@ -98,6 +143,7 @@ All benchmark folders of Linear Regression and Logistic Regression are similar t
 │       └── LogReg_int8_builtin
 │           ├── ...
 └── README.md
+└── LICENSE
 ```
 
 ### K-means and Decision Trees 
@@ -134,8 +180,8 @@ By default, Linear Regression and Logistic Regression benchmarks use synthetic d
 TODO
 
 ### Getting Help 
-If you have any suggestions for improvement, please contact yuxin.guo.007 at gmail dot com. 
+If you have any suggestions for improvement, please contact yuxin.guo.007 at gmail dot com and el1goluj at gmail dot com. 
 If you find any bugs or have further questions or requests, please post an issue at the [issue page](https://github.com/CMU-SAFARI/pim-ml/issues).
 
 ## Acknowledgments 
-TODO
+We acknowledge the generous gifts provided by our industrial partners, including ASML, Facebook, Google, Huawei, Intel, Microsoft, and VMware. We acknowledge support from the Semiconductor Research Corporation, the ETH Future Computing Laboratory, and the BioPIM project. 
