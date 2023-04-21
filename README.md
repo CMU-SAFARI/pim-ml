@@ -1,4 +1,4 @@
-# pim-ml
+# PIM-ML
 PIM-ML is a benchmark for training machine learning algorithms on the [UPMEM](https://www.upmem.com/) architecture, which is the first publicly-available real-world processing-in-memory (PIM) architecture. The UPMEM architecture integrates DRAM memory banks and general-purpose in-order cores, called DRAM Processing Units (DPUs), in the same chip. 
 
 PIM-ML is designed to understand the potential of modern general-purpose PIM architectures to accelerate machine learning training. 
@@ -142,7 +142,7 @@ All benchmark folders of Linear Regression and Logistic Regression are similar t
 │       │   ├── ...
 │       └── LogReg_int8_builtin
 │           ├── ...
-└── README.md
+│── README.md
 └── LICENSE
 ```
 
