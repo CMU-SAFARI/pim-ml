@@ -23,7 +23,7 @@ cd pim-ml
 
 ## Repository Structure
 ### Linear Regression and Logistic Regression
-All benchmark folders of Linear Regression and Logistic Regression are similar to the one shown in `/Linear_Regression`. 
+All benchmark folders of Linear Regression and Logistic Regression are similar to the one shown in `/Linear_Regression/LinReg_no_quantization/LogReg_int32_float`. 
 ```
 .
 ├── Linear_Regression
