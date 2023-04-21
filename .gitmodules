@@ -1,0 +1,6 @@
+[submodule "scikit-dpu"]
+	path = scikit-dpu
+	url = https://github.com/upmem/scikit-dpu
+[submodule "dpu_kmeans"]
+	path = dpu_kmeans
+	url = https://github.com/upmem/dpu_kmeans.git
