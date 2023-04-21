@@ -146,8 +146,10 @@ All benchmark folders of Linear Regression and Logistic Regression are similar t
 └── LICENSE
 ```
 
-### K-means and Decision Trees 
-TODO
+### Decision Tree and K-Means Clustering
+PIM-ML implementations of Decision Tree and K-Means Clustering can be found in the following repositories.
+- Decision Tree: https://github.com/upmem/scikit-dpu
+- K-Means Clustering: https://github.com/upmem/dpu_kmeans
 
 ## Running PIM-ML 
 ### Linear Regression and Logistic Regression
@@ -176,8 +178,10 @@ NR_DPUS=32 NR_TASKLETS=16 make all
 
 By default, Linear Regression and Logistic Regression benchmarks use synthetic dataset. To use real dataset, the ```BENCHMARK_FOLDER/host/app.c``` should be editted to read the real dataset from a specific file. 
 
-### K-means and Decision Trees 
-TODO
+### Decision Tree and K-Means Clustering
+Check the following documents.
+- Decision Tree: https://github.com/upmem/scikit-dpu/blob/master/README.rst
+- K-Means Clustering: https://github.com/upmem/dpu_kmeans/blob/master/README.md
 
 ### Getting Help 
 If you have any suggestions for improvement, please contact yuxin.guo.007 at gmail dot com and el1goluj at gmail dot com. 
