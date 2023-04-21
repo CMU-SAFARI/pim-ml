@@ -25,6 +25,7 @@ cd pim-ml
 ### Linear Regression and Logistic Regression
 All benchmark folders of Linear Regression and Logistic Regression are similar to the one shown in `/Linear_Regression`. 
 ```
+.
 ├── Linear_Regression
 │   ├── Baseline
 │   │   ├── CPU_MKL
