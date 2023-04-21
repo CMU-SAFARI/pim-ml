@@ -183,7 +183,7 @@ Check the following documents.
 - Decision Tree: https://github.com/upmem/scikit-dpu/blob/master/README.rst
 - K-Means Clustering: https://github.com/upmem/dpu_kmeans/blob/master/README.md
 
-### Getting Help 
+## Getting Help 
 If you have any suggestions for improvement, please contact yuxin.guo.007 at gmail dot com and el1goluj at gmail dot com. 
 If you find any bugs or have further questions or requests, please post an issue at the [issue page](https://github.com/CMU-SAFARI/pim-ml/issues).
 
