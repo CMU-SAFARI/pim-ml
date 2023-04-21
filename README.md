@@ -5,8 +5,8 @@ PIM-ML is designed to understand the potential of modern general-purpose PIM arc
 PIM-ML implements several representative classic machine learning algorithms: 
 - Linear Regression 
 - Logistic Regression 
-- K-means 
-- Decision Trees 
+- Decision Tree
+- K-means Clustering
 
 ## Citation
 Please cite the following papers if you find this repository useful.
