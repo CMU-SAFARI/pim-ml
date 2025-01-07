@@ -34,7 +34,7 @@ Bibtex entry for citation:
 @inproceedings{gomezluna2022isvlsi,
       title={{Machine Learning Training on a Real Processing-in-Memory System}}, 
       author={Juan Gómez-Luna and Yuxin Guo and Sylvan Brocard and Julien Legriel and Remy Cimadomo and Geraldo F. Oliveira and Gagandeep Singh and Onur Mutlu},
-      booktitle=ISVLSI}, 
+      booktitle={ISVLSI}, 
       year={2022}
 }
 ```
